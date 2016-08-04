@@ -5,14 +5,14 @@ require 'kinopoisk/search'
 require 'kinopoisk/person'
 
 module Kinopoisk
-  SEARCH_URL = 'http://www.kinopoisk.ru/index.php?kp_query='
+  SEARCH_URL = 'https://www.kinopoisk.ru/index.php?kp_query='
 
   NotFound = Class.new StandardError
   Denied   = Class.new StandardError
 
   # Headers are needed to mimic proper request so kinopoisk won't block it
   def self.fetch(url)
-    HTTPClient.new.get url, nil, { 'User-Agent'=>'a', 'Accept-Encoding'=>'a' }
+    HTTPClient.new.get url, nil, { follow_redirect: true, 'User-Agent'=>'a', 'Accept-Encoding'=>'a' }
   end
 
   # Returns a nokogiri document or an error if fetch response status is not 200
