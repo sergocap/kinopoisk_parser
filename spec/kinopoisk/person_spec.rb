@@ -5,11 +5,11 @@ describe Kinopoisk::Person, vcr: { cassette_name: 'people' } do
   let(:person) { Kinopoisk::Person.new 13180 }
 
   it 'should return right url' do
-    person.url.should eq('http://www.kinopoisk.ru/name/13180/')
+    person.url.should eq('https://www.kinopoisk.ru/name/13180/')
   end
 
   it { person.best_movies.should include('Карты, деньги, два ствола', 'Братья по оружию') }
-  it { person.poster.should eq('http://st.kp.yandex.net/images/actor_iphone/iphone360_13180.jpg') }
+  it { person.poster.should eq('https://st.kp.yandex.net/images/actor_iphone/iphone360_13180.jpg') }
   it { person.career.should eq(['Актер', 'Режиссер', 'Сценарист', 'Продюсер']) }
   it { person.genres.should eq(['драма', 'комедия', 'криминал']) }
   it { person.partner.should eq('Далия Ибельхауптайте') }

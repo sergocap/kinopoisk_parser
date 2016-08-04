@@ -5,12 +5,12 @@ describe Kinopoisk::Movie, vcr: { cassette_name: 'movies' } do
   let(:dexter) { Kinopoisk::Movie.new 277537 }
   let(:avatar) { Kinopoisk::Movie.new 251733 }
 
-  it { dexter.url.should eq('http://www.kinopoisk.ru/film/277537/') }
+  it { dexter.url.should eq('https://www.kinopoisk.ru/film/277537/') }
   it { dexter.title.should eq('Декстер') }
   it { dexter.title_en.should eq('Dexter') }
 
-  it { dexter.poster.should eq('http://st.kp.yandex.net/images/film_iphone/iphone360_277537.jpg') }
-  it { dexter.poster_big.should eq('http://st.kp.yandex.net/images/film_big/277537.jpg') }
+  it { dexter.poster.should eq('https://st.kp.yandex.net/images/film_iphone/iphone360_277537.jpg') }
+  it { dexter.poster_big.should eq('https://st.kp.yandex.net/images/film_big/277537.jpg') }
 
   it { dexter.year.should eq(2006) }
   it { dexter.countries.should eq(['США']) }
@@ -47,7 +47,7 @@ describe Kinopoisk::Movie, vcr: { cassette_name: 'movies' } do
   end
 
   it 'should raise error if nothing found' do
-    expect { Kinopoisk::Movie.new(111111111).title }.to raise_error
+    expect { Kinopoisk::Movie.new(111111111).title }.to raise_error Kinopoisk::NotFound
   end
 
   context 'by title' do
