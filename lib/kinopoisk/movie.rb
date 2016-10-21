@@ -182,10 +182,10 @@ module Kinopoisk
       url = SEARCH_URL + "#{URI.escape(title)}&first=yes"
       location = Kinopoisk.fetch(url).headers['Location'].to_s
 
-      if location.include?('error.kinopoisk.ru')
+      if location =~ /error\.kinopoisk\.ru|showcaptcha/
         raise Denied, 'Request denied'
       else
-        location.match(/\/(\d*)\/$/)[1]
+        id_match[1] if id_match = location.match(/\/(\d*)\/$/)
       end
     end
 
