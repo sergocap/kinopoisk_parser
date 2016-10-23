@@ -14,7 +14,7 @@ module Kinopoisk
     # Movie page request is made once and on the first access to a remote data.
     #
     def initialize(input, title=nil)
-      @id    = input.is_a?(String) ? find_by_title(input) : input
+      @id    = input.is_a?(String) ? find_id_by_title(input) : input
       @url   = "https://www.kinopoisk.ru/film/#{id}/"
       @title = title
     end
@@ -176,18 +176,8 @@ module Kinopoisk
       @doc ||= Kinopoisk.parse url
     end
 
-    # Kinopoisk has defined first=yes param to redirect to first result
-    # Return its id from location header
-    def find_by_title(title)
-      url = SEARCH_URL + "#{URI.escape(title)}&first=yes"
-      location = Kinopoisk.fetch(url).headers['Location'].to_s
-
-      if location =~ /error\.kinopoisk\.ru|showcaptcha/
-        raise Denied, 'Request denied'
-      else
-        id_match = location.match(/\/(\d*)\/$/)
-        id_match[1] if id_match
-      end
+    def find_id_by_title(title)
+      Search.new(title).movies.first&.id || raise(NotFound)
     end
 
     def search_by_itemprop(name)
