@@ -185,7 +185,8 @@ module Kinopoisk
       if location =~ /error\.kinopoisk\.ru|showcaptcha/
         raise Denied, 'Request denied'
       else
-        id_match[1] if id_match = location.match(/\/(\d*)\/$/)
+        id_match = location.match(/\/(\d*)\/$/)
+        id_match[1] if id_match
       end
     end
 
