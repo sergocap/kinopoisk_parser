@@ -1,7 +1,7 @@
 #coding: UTF-8
 module Kinopoisk
   class Movie
-    attr_accessor :id, :url, :title, :year
+    attr_accessor :id, :url, :title
 
     # New instance can be initialized with id(integer) or title(string). Second
     # argument may also receive a string title to make it easier to
@@ -89,6 +89,11 @@ module Kinopoisk
     # Returns a url to a big sized poster
     def poster_big
       poster.gsub 'iphone/iphone360_', 'big/'
+    end
+
+    # Returns an integer release year
+    def year
+      @year.zero? ? doc.search("table.info a[href*='/m_act%5Byear%5D/']").text.to_i : @year
     end
 
     # Returns an integer length of the movie in minutes
