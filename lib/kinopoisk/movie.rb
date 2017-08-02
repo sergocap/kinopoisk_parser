@@ -182,7 +182,7 @@ module Kinopoisk
     end
 
     def find_id_by_title(title)
-      Search.new(title).movies.first&.id || raise(NotFound)
+      Search.new(title).movies.first.try(:id) || raise(NotFound)
     end
 
     def search_by_itemprop(name)
