@@ -10,7 +10,7 @@ module Kinopoisk
 
     # Returns an array containing Kinopoisk::Movie instances
     def movies
-      find_nodes('film').map{|n| new_movie n }
+      find_nodes_film_and_year.map{|n| new_movie n }.compact
     end
 
     # Returns an array containing Kinopoisk::Person instances
@@ -28,12 +28,23 @@ module Kinopoisk
       doc.search ".info .name a[href*='/#{type}/']"
     end
 
+    def find_nodes_film_and_year
+      doc.search ".info .name"
+    end
+
     def parse_id(node, type)
-      node.attr('href').match(/\/#{type}\/(\d*)\//)[1].to_i
+      node.attr('href').value.match(/\/#{type}\/(\d*)\//)[1].to_i
     end
 
     def new_movie(node)
-      Movie.new parse_id(node, 'film'), node.text.gsub(' (сериал)', '')
+      title_node = node.search("a[href*='/film/']")
+      if title_node.present?
+        id = parse_id(title_node, 'film')
+        title = title_node.text.gsub(' (сериал)', '')
+        year = node.search("span.year").text
+
+        Movie.new id, title, year
+      end
     end
 
     def new_person(node)
