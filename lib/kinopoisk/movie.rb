@@ -1,7 +1,7 @@
 #coding: UTF-8
 module Kinopoisk
   class Movie
-    attr_accessor :id, :url, :title, :y
+    attr_accessor :id, :url, :title, :year
 
     # New instance can be initialized with id(integer) or title(string). Second
     # argument may also receive a string title to make it easier to
@@ -13,11 +13,11 @@ module Kinopoisk
     # Initializing by title would send a search request and return first match.
     # Movie page request is made once and on the first access to a remote data.
     #
-    def initialize(input, title=nil, y=nil)
+    def initialize(input, title=nil, year=nil)
       @id    = input.is_a?(String) ? find_id_by_title(input) : input
       @url   = "https://www.kinopoisk.ru/film/#{id}/"
       @title = title
-      @y     = y
+      @year  = year.to_i
     end
 
     # Returns an array of strings containing actor names
@@ -39,11 +39,6 @@ module Kinopoisk
     # Returns a float imdb rating
     def imdb_rating
       doc.search('div.block_2 div:eq(2)').text[/\d.\d\d/].to_f
-    end
-
-    # Returns an integer release year
-    def year
-      doc.search("table.info a[href*='/m_act%5Byear%5D/']").text.to_i
     end
 
     # Returns an array of strings containing countries
@@ -169,6 +164,10 @@ module Kinopoisk
     # Returns a string containing duration of the film
     def duration
       search_by_text('время').strip
+    end
+
+    def trailers
+      doc.search('#movie-trailer-block iframe').map {|trailer| trailer.attr('src') }
     end
 
     private
